@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Fetches response from a url.
 func Fetch(url string) (*http.Response, int, error) {
 
 	client := &http.Client{
@@ -16,5 +17,4 @@ func Fetch(url string) (*http.Response, int, error) {
 	}
 
 	return resp, resp.StatusCode, nil
-
 }
