@@ -1,1 +1,3 @@
 package goscrape
+
+func Scraper()
