@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/augustinlss/goscrape"
 	"github.com/augustinlss/goscrape/utils"
 )
 

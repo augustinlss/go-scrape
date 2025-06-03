@@ -1,3 +1,5 @@
 package goscrape
 
-func Scraper()
+func Scrape(url string, depth int16) *ScrapedPage {
+
+}
