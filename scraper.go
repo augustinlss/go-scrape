@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/augustinlss/goscrape/parser"
 	"github.com/augustinlss/goscrape/utils"
 )
 
@@ -37,6 +36,6 @@ func Scrape(url string, depth int16) *ScrapedPage {
 		return nil
 	}
 
-	return parser.FuzzyParse(doc)
+	return FuzzyParse(doc, url)
 
 }

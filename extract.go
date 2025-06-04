@@ -1,8 +1,6 @@
-package output
+package goscrape
 
-import (
-	"github.com/PuerkitoBio/goquery"
-)
+import "github.com/PuerkitoBio/goquery"
 
 func ExtractTitle(doc *goquery.Document) string {
 	title := doc.Find("title").First().Text()
@@ -10,3 +8,5 @@ func ExtractTitle(doc *goquery.Document) string {
 	return title
 
 }
+
+func ExtractParagraphs(doc *goquery.Document) []string
