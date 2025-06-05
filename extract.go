@@ -10,12 +10,24 @@ func ExtractTitle(doc *goquery.Document) string {
 }
 
 func ExtractParagraphs(doc *goquery.Document) []string {
-	paragraphsSelection := doc.Find("p")
+	paragraphSelections := doc.Find("p")
 
 	var paragraphs []string
-	paragraphsSelection.Each(func(i int, s *goquery.Selection) {
+	paragraphSelections.Each(func(i int, s *goquery.Selection) {
 		paragraphs = append(paragraphs, s.Text())
 	})
 
 	return paragraphs
+}
+
+func ExtractLinks(doc goquery.Document) []string {
+	linkSelections := doc.Find("a")
+
+	var links []string
+
+	linkSelections.Each(func(i int, s *goquery.Selection) {
+		links = append(links, s.Text())
+	})
+
+	return links
 }
