@@ -36,6 +36,8 @@ func Scrape(url string, depth int16) *ScrapedPage {
 		return nil
 	}
 
+	var res []ScrapedPage
+
 	return FuzzyParse(doc, url)
 
 }

@@ -20,7 +20,7 @@ func ExtractParagraphs(doc *goquery.Document) []string {
 	return paragraphs
 }
 
-func ExtractLinks(doc goquery.Document) []string {
+func ExtractLinks(doc *goquery.Document) []string {
 	linkSelections := doc.Find("a")
 
 	var links []string

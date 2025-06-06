@@ -6,6 +6,10 @@ import (
 
 func FuzzyParse(doc *goquery.Document, url string) *ScrapedPage {
 	return &ScrapedPage{
-		URL: url,
+		URL:        url,
+		Title:      ExtractTitle(doc),
+		Paragraphs: ExtractParagraphs(doc),
+		Links:      ExtractLinks(doc),
+		Depth:      0,
 	}
 }
