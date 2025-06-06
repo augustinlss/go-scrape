@@ -1,6 +1,10 @@
 package goscrape
 
-import "github.com/PuerkitoBio/goquery"
+import (
+	"strings"
+
+	"github.com/PuerkitoBio/goquery"
+)
 
 func ExtractTitle(doc *goquery.Document) string {
 	title := doc.Find("title").First().Text()
@@ -20,14 +24,25 @@ func ExtractParagraphs(doc *goquery.Document) []string {
 	return paragraphs
 }
 
-func ExtractLinks(doc *goquery.Document) []string {
+func ExtractLinks(doc *goquery.Document, limit int) []string {
 	linkSelections := doc.Find("a")
 
 	var links []string
+	var limit_so_far int
 
 	linkSelections.Each(func(i int, s *goquery.Selection) {
-		links = append(links, s.Text())
+		href, exists := s.Attr("href")
+
+		if limit_so_far == limit {
+			return
+		}
+
+		if exists && strings.HasPrefix(href, "http") {
+			limit_so_far++
+			links = append(links, href)
+		}
 	})
 
 	return links
+
 }

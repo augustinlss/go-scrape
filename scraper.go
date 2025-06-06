@@ -1,6 +1,7 @@
 package goscrape
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -8,7 +9,7 @@ import (
 	"github.com/augustinlss/goscrape/utils"
 )
 
-func Scrape(url string, depth int16) *ScrapedPage {
+func Scrape(url string, depth int, linkLimit int) *[]ScrapedPage {
 	resp, status, err := utils.Fetch(url)
 
 	defer resp.Body.Close()
@@ -35,9 +36,51 @@ func Scrape(url string, depth int16) *ScrapedPage {
 		log.Fatalf("Error fetching url content...")
 		return nil
 	}
+	firstPage := FuzzyParse(doc, url, linkLimit)
+	var res []ScrapedPage
+	res = append(res, *firstPage)
 
-	//	var res []ScrapedPage
+	queue := NewQueue[ScrapedPage]()
+	queue.Enqueue(*firstPage)
 
-	return FuzzyParse(doc, url)
+	// TODO do BFS here to search through all the pages at a certain depth
+	for queue.Length > 0 {
+		current_page, _ := queue.Dequeue()
+		current_depth := current_page.Depth
 
+		// if reached max depth then we don't explore this path any futher
+		if current_depth == depth || len(current_page.Links) == 0 {
+			continue
+		}
+
+		for _, link := range current_page.Links {
+			resp, status, err := utils.Fetch(link)
+
+			fmt.Println(link)
+
+			if err != nil {
+				log.Println("Error crawling link...")
+				continue
+			}
+
+			if status != http.StatusOK {
+				log.Printf("Unexpected status code when crawling link: %s, got code: %d", link, status)
+				continue
+			}
+
+			doc, err := goquery.NewDocumentFromReader(resp.Body)
+
+			if err != nil {
+				log.Println("Error fetching link content...")
+				continue
+			}
+			discoverdPage := FuzzyParse(doc, link, linkLimit)
+			discoverdPage.Depth = current_depth + 1
+			queue.Enqueue(*discoverdPage)
+			res = append(res, *discoverdPage)
+		}
+
+	}
+
+	return &res
 }
